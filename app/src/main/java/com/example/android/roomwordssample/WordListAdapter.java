@@ -17,10 +17,16 @@ package com.example.android.roomwordssample;
  */
 
 import android.content.Context;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.Collections;
@@ -31,24 +37,39 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
 
     class WordViewHolder extends RecyclerView.ViewHolder {
         private final TextView wordItemView;
+        private ImageButton deleteButton;
+        private final Context context;
 
-        private WordViewHolder(View itemView) {
+        private WordViewHolder(View itemView, Context context2) {
             super(itemView);
+            this.context = context2;
             wordItemView = itemView.findViewById(R.id.textView);
+            deleteButton = itemView.findViewById(R.id.imgButton);
+
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    WordViewModel mWordViewModel = ViewModelProviders.of((FragmentActivity) context).get(WordViewModel.class);;
+                    Word word = new Word(wordItemView.getText().toString());
+                    mWordViewModel.remove(word);
+                }
+            });
         }
     }
 
     private final LayoutInflater mInflater;
     private List<Word> mWords = Collections.emptyList(); // Cached copy of words
+    private Context context;
 
     WordListAdapter(Context context) {
+        this.context = context;
         mInflater = LayoutInflater.from(context);
     }
 
     @Override
     public WordViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = mInflater.inflate(R.layout.recyclerview_item, parent, false);
-        return new WordViewHolder(itemView);
+        return new WordViewHolder(itemView, context);
     }
 
     @Override

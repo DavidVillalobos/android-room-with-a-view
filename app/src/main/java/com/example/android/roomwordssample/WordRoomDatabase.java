@@ -88,12 +88,12 @@ public abstract class WordRoomDatabase extends RoomDatabase {
         protected Void doInBackground(final Void... params) {
             // Start the app with a clean database every time.
             // Not needed if you only populate on creation.
-            mDao.deleteAll();
+            /*mDao.deleteAll();
 
             Word word = new Word("Hello");
             mDao.insert(word);
             word = new Word("World");
-            mDao.insert(word);
+            mDao.insert(word);*/
             return null;
         }
     }

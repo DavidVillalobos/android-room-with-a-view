@@ -59,6 +59,14 @@ class WordRepository {
         new removeAsyncTask(mWordDao).execute(word);
     }
 
+    public void updateWord(String old_word, String new_word) {
+        new updateWordAsyncTask(mWordDao).execute(old_word, new_word);
+    }
+
+    public void updateImage(byte[] image, String word) {
+        new updateImageAsyncTask(mWordDao).execute(new Word(word, image));
+    }
+
     private static class insertAsyncTask extends AsyncTask<Word, Void, Void> {
 
         private WordDao mAsyncTaskDao;
@@ -85,6 +93,36 @@ class WordRepository {
         @Override
         protected Void doInBackground(final Word... params) {
             mAsyncTaskDao.delete(params[0]);
+            return null;
+        }
+    }
+
+    private static class updateWordAsyncTask extends AsyncTask<String, Void, Void> {
+
+        private WordDao mAsyncTaskDao;
+
+        updateWordAsyncTask(WordDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final String... params) {
+            mAsyncTaskDao.updateWord(params[0], params[1]);
+            return null;
+        }
+    }
+
+    private static class updateImageAsyncTask extends AsyncTask<Word, Void, Void> {
+
+        private WordDao mAsyncTaskDao;
+
+        updateImageAsyncTask(WordDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Word... params) {
+            mAsyncTaskDao.updateImage(params[0].getImage(), params[0].getWord());
             return null;
         }
     }

@@ -28,6 +28,13 @@ limitations under the License. -->
         android:textAlignment="center"
         android:background="@android:color/holo_orange_light"
         />
+    <ImageButton
+        android:id="@+id/editButton"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:background="@android:color/holo_orange_light"
+        android:src="@drawable/ic_baseline_edit_24" />
 
     <ImageButton
         android:id="@+id/imgButton"

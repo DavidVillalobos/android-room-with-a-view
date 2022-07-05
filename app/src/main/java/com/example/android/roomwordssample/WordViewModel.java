@@ -51,4 +51,13 @@ public class WordViewModel extends AndroidViewModel {
     }
 
     void remove(Word word) { mRepository.remove(word);}
+
+    public void updateWord(String old_word, String new_word) {
+        mRepository.updateWord(old_word, new_word);
+    }
+
+    public void updateImage(byte[] image, String word) {
+        mRepository.updateImage(image, word);
+    }
+
 }

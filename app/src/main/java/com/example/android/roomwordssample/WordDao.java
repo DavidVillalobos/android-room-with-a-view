@@ -54,4 +54,10 @@ public interface WordDao {
 
     @Query("DELETE FROM word_table")
     void deleteAll();
+
+    @Query("UPDATE word_table SET word = :new_word WHERE word = :old_word")
+    void updateWord(String old_word, String new_word);
+
+    @Query("UPDATE word_table SET image = :image WHERE word = :word")
+    void updateImage(byte[] image, String word);
 }

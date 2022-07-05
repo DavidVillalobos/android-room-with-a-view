@@ -29,7 +29,7 @@ import androidx.annotation.NonNull;
  * The fact that this has very few comments emphasizes its coolness.
  */
 
-@Database(entities = {Word.class}, version = 1)
+@Database(entities = {Word.class}, version = 2)
 public abstract class WordRoomDatabase extends RoomDatabase {
 
     public abstract WordDao wordDao();
@@ -88,9 +88,9 @@ public abstract class WordRoomDatabase extends RoomDatabase {
         protected Void doInBackground(final Void... params) {
             // Start the app with a clean database every time.
             // Not needed if you only populate on creation.
-            /*mDao.deleteAll();
+            //mDao.deleteAll();
 
-            Word word = new Word("Hello");
+            /*Word word = new Word("Hello");
             mDao.insert(word);
             word = new Word("World");
             mDao.insert(word);*/

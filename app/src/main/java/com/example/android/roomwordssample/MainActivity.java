@@ -26,6 +26,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -35,6 +37,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     public static final int NEW_WORD_ACTIVITY_REQUEST_CODE = 1;
+    public static final int EDIT_WORD_ACTIVITY_REQUEST_CODE = 2;
+    public static final int LOAD_PHOTO_WORD_ACTIVITY_REQUEST_CODE = 3;
 
     private WordViewModel mWordViewModel;
 
@@ -77,11 +81,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == NEW_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Word word = new Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY));
+            Word word = new Word(data.getStringExtra(NewWordActivity.EXTRA_REPLY), null);
             mWordViewModel.insert(word);
-        } else {
+        } else if (requestCode == EDIT_WORD_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
+            Log.d("DEBUG","Apply changes to word -> " + data.getStringExtra("old_word"));
+            Log.d("DEBUG","Apply changes to word -> " + data.getStringExtra("image"));
+            Log.d("DEBUG","Apply changes to word -> " + data.getStringExtra(EditWordActivity.EXTRA_REPLY));
+            mWordViewModel.updateWord(
+                    data.getStringExtra("old_word"),
+                    data.getStringExtra(EditWordActivity.EXTRA_REPLY)
+            );
+            byte[] image = data.getByteArrayExtra("image");
+            if(image != null){
+                mWordViewModel.updateImage(
+                        image,
+                        data.getStringExtra(EditWordActivity.EXTRA_REPLY)
+                );
+            }
+        } else if (requestCode != EDIT_WORD_ACTIVITY_REQUEST_CODE){
             Toast.makeText(
                     getApplicationContext(),
                     R.string.empty_not_saved,

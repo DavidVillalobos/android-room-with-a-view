@@ -16,6 +16,7 @@ package com.example.android.roomwordssample;
  * limitations under the License.
  */
 
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -40,12 +41,21 @@ public class Word {
     @ColumnInfo(name = "word")
     private String mWord;
 
-    public Word(@NonNull String word) {
+    @ColumnInfo(name = "image", typeAffinity = ColumnInfo.BLOB)
+    private byte[] image;
+
+    public Word(@NonNull String word, byte[] image) {
         this.mWord = word;
+        this.image = image;
     }
 
     @NonNull
     public String getWord() {
         return this.mWord;
     }
+
+    public byte[] getImage() {
+        return image;
+    }
+
 }

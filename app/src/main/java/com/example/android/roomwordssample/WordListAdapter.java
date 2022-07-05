@@ -22,12 +22,15 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,45 +40,61 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
 
     class WordViewHolder extends RecyclerView.ViewHolder {
         private final TextView wordItemView;
-        private ImageButton deleteButton;
-        private final Context context;
+        private byte[] image;
 
-        private WordViewHolder(View itemView, Context context2) {
+        private ImageButton deleteButton;
+        private ImageButton editButton;
+
+        private WordViewHolder(View itemView) {
             super(itemView);
-            this.context = context2;
             wordItemView = itemView.findViewById(R.id.textView);
             deleteButton = itemView.findViewById(R.id.imgButton);
-
+            editButton = itemView.findViewById(R.id.editButton);
+            this.image = null;
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    WordViewModel mWordViewModel = ViewModelProviders.of((FragmentActivity) context).get(WordViewModel.class);;
-                    Word word = new Word(wordItemView.getText().toString());
+                    WordViewModel mWordViewModel = ViewModelProviders.of((FragmentActivity) v.getContext()).get(WordViewModel.class);
+                    Word word = new Word(wordItemView.getText().toString(), null);
                     mWordViewModel.remove(word);
                 }
             });
+
+            editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Word word = new Word(wordItemView.getText().toString(), null);
+                    Log.d("DEBUG","Click on edit" + word.getWord());
+                    Intent intent = new Intent(v.getContext(), EditWordActivity.class);
+                    intent.putExtra("word", word.getWord());
+                    intent.putExtra("image", image);
+                    ((FragmentActivity) v.getContext()).startActivityForResult(intent, MainActivity.EDIT_WORD_ACTIVITY_REQUEST_CODE);
+                }
+
+            });
         }
+
     }
 
     private final LayoutInflater mInflater;
     private List<Word> mWords = Collections.emptyList(); // Cached copy of words
-    private Context context;
 
     WordListAdapter(Context context) {
-        this.context = context;
         mInflater = LayoutInflater.from(context);
     }
 
     @Override
     public WordViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = mInflater.inflate(R.layout.recyclerview_item, parent, false);
-        return new WordViewHolder(itemView, context);
+        return new WordViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(WordViewHolder holder, int position) {
         Word current = mWords.get(position);
         holder.wordItemView.setText(current.getWord());
+        holder.image = current.getImage();
+
     }
 
     void setWords(List<Word> words) {
